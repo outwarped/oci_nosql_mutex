@@ -1,12 +1,19 @@
-# oci_nosql_mutex
-
 # Description
 
 Distributed Mutex implementation with OCI (Oracle Cloud Infrastructure) [NoSQL API](https://oracle-cloud-infrastructure-python-sdk.readthedocs.io/en/latest/api/nosql.html)
 
+## NoSQL table schema
+
+|Primary key|Column name|Type|Shard key|Not null|
+|---|---|---|---|---|
+|Yes|key|STRING|Yes|Yes|
+|No|score|NUMBER|No|Yes|
+|No|owner|STRING|No|No|
+|No|body|JSON|No|No|
+
 ## Key points
 
-* Mutex is represented as a single record in NoSQL table
+* Mutex is represented as a single record in NoSQL table.
 
 * Mutex record has a payload body
 
