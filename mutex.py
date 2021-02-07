@@ -53,7 +53,7 @@ class NoSQLTasks(object):
         if not (include_unattended or include_expired):
             return []
         
-        lock_id_mask = "\"{}\"".format(lock_id_mask) if lock_id_mask is None else "*"
+        lock_id_mask = " AND key = \"{}\"".format(lock_id_mask) if lock_id_mask is None else ""
         
         start = 0 if include_unattended else 1
         end = 1 if not include_expired else int(datetime.now().timestamp() * 1000000) - self._timeout
@@ -61,7 +61,7 @@ class NoSQLTasks(object):
         res = self._client.query(
             query_details=oci.nosql.models.QueryDetails(
                 compartment_id=self._table.compartment_id,
-                statement="SELECT {lock_id_mask} FROM {name} WHERE score >= {start} AND score < {end}".format(lock_id_mask=lock_id_mask, name=self._table.name, start=start, end=end),
+                statement="SELECT key FROM {name} WHERE score >= {start} AND score < {end}{lock_id_mask}".format(lock_id_mask=lock_id_mask, name=self._table.name, start=start, end=end),
                 is_prepared=False,
                 consistency="EVENTUAL",
             ),
